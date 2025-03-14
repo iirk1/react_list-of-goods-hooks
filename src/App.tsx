@@ -56,15 +56,6 @@ export const App = () => {
     sortField,
     reverse: isReversed,
   });
-  const handleSortAlphabetically = () => setSortField(SortType.Alphabetically);
-  const handleSortByLength = () => setSortField(SortType.ByLength);
-  const handleReverse = () => setIsReversed(!isReversed);
-  const handleReset = () => {
-    setSortField('');
-    setIsReversed(false);
-  };
-
-  const isResetNeeded = sortField || isReversed;
 
   return (
     <div className="section content">
@@ -73,39 +64,49 @@ export const App = () => {
           type="button"
           className={cn('button', 'is-info', {
             'is-light': sortField !== SortType.Alphabetically,
+            'is-active': sortField === SortType.Alphabetically,
           })}
-          onClick={handleSortAlphabetically}
+          onClick={() => setSortField(SortType.Alphabetically)}
         >
           Sort alphabetically
         </button>
+
         <button
           type="button"
           className={cn('button', 'is-success', {
             'is-light': sortField !== SortType.ByLength,
+            'is-active': sortField === SortType.ByLength,
           })}
-          onClick={handleSortByLength}
+          onClick={() => setSortField(SortType.ByLength)}
         >
           Sort by length
         </button>
+
         <button
           type="button"
           className={cn('button', 'is-warning', {
-            'is-light': isReversed === false,
+            'is-light': !isReversed,
+            'is-active': isReversed,
           })}
-          onClick={handleReverse}
+          onClick={() => setIsReversed(!isReversed)}
         >
           Reverse
         </button>
-        {isResetNeeded && (
+
+        {(sortField !== SortType.Default || isReversed) && (
           <button
             type="button"
             className="button is-danger is-light"
-            onClick={handleReset}
+            onClick={() => {
+              setSortField(SortType.Default);
+              setIsReversed(false);
+            }}
           >
             Reset
           </button>
         )}
       </div>
+
       <ul>
         {readyGoods.map(good => (
           <li key={good} data-cy="Good">
